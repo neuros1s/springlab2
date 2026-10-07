@@ -1,0 +1,12 @@
+server:
+  port: 8080
+app:
+  mail:
+    enabled: true
+    retry-count: 5
+  ui:
+    theme: LIGHT
+    items-per-page: 15
+logging:
+  level:
+    kz.iitu: WARN

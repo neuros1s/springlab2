@@ -1,0 +1,12 @@
+server:
+  port: 8081
+app:
+  mail:
+    enabled: false
+    retry-count: 1
+  ui:
+    theme: DARK
+    items-per-page: 20
+logging:
+  level:
+    kz.iitu: DEBUG
