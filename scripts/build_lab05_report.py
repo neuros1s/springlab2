@@ -241,7 +241,7 @@ new('Catalogue after refreshing')
 picture('refreshed.png','Figure 4. A second GET keeps four books and no longer displays the flash message.')
 
 new('Status code experiment')
-table(['Request','Observed status','Part that failed'],[
+table(['Request','Status','Part that failed'],[
     ('GET /api/books/abc',REQ['error_400']['status'],
      'The path matched, but abc cannot be converted to the long id argument. Binding failed before the method ran.'),
     ('GET /api/nothing',REQ['error_404']['status'],
