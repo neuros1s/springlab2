@@ -1,43 +1,94 @@
-# Spring Laboratory Work 4
+# Spring Labs 2 3 4 and 5
 
-Turgynbek Amirbek, IS2413. Variant 8 (class-list position 20, cyclic allocation).
+Student: Turgynbek Amirbek, IS2413. Class-list position: 20. Lab 5 variant: 8.
 
-Requires Java 25 and Maven 3.6.3 or newer. Spring Boot 3.5.16 manages dependency versions, including spring-boot-starter-aop. Build from this directory:
+Lab 5 adds a book catalogue API, an HTML page, static resources, Post/Redirect/Get,
+and response field names selected through Accept-Language. It continues the
+verified Lab 4 project in the same Spring Boot application.
 
-```sh
-mvn clean verify
-java -jar target/spring-lab-01-0.0.1-SNAPSHOT.jar
-```
+## Run
 
-The service simulates a catalog; it does not delete database records. Default port: 8080.
+Use JDK 25 and Maven 3.6.3 or newer:
 
-| Request | Purpose |
+    mvn clean verify
+    java -jar target/spring-lab-01-0.0.1-SNAPSHOT.jar
+
+Open http://localhost:8080/books. The root URL http://localhost:8080/ serves the
+welcome page. Each application restart restores the three seed books because
+the repository is in memory.
+
+## Lab 5 endpoints
+
+| Request | Result |
 | --- | --- |
-| GET /api/lab4/item/5 | Logged and timed, not audited |
-| GET /api/lab4/items?limit=5 | Audited slow successful operation |
-| DELETE /api/lab4/item/0 | Exception, audit failure, HTTP 400 |
-| DELETE /api/lab4/item/5 | External audited removal |
-| GET /api/lab4/proxy | Real proxy type and superclass |
-| GET /api/lab4/remove-twice/5 | Self-invocation bypasses advice for remove |
-| GET /api/lab4/remove-twice-fixed/5 | Two calls through CatalogService proxy |
-| GET /api/lab4/remove-twice-fixed/0 | Nested exception and trace cleanup |
+| GET /api/books?author=Bloch&limit=1 | 200 and a filtered JSON list; default limit is 10 |
+| GET /api/books/{id} | 200 or 404 |
+| POST /api/books with JSON | 201, created book and Location |
+| PUT /api/books/{id} with JSON | 200 replacement or 404; the path id wins |
+| DELETE /api/books/{id} | 204 with no body or 404 |
+| GET /books?author=Bloch | HTML rendered from the model |
+| POST /books with form fields | 302 redirect and a one-time flash message |
+| GET /css/app.css | Static stylesheet |
+| GET / | Static welcome page |
 
-Windows PowerShell:
+The author filter matches a fragment without case sensitivity. A new resource
+always receives a new id; a client id cannot overwrite another book. PUT never
+inserts an absent id. Negative limits and invalid book data give 400.
 
-```powershell
-curl.exe "http://localhost:8080/api/lab4/items?limit=5"
-curl.exe -X DELETE "http://localhost:8080/api/lab4/item/0"
-curl.exe "http://localhost:8080/api/lab4/proxy"
-curl.exe "http://localhost:8080/api/lab4/remove-twice/5"
-curl.exe "http://localhost:8080/api/lab4/remove-twice-fixed/5"
-```
+Use requests-lab05.http for all demonstration requests.
 
-Mac/Linux use curl instead of curl.exe.
+## Variant 8
 
-Trace has order 0, audit 1, logging 2, timing 3. The added trace wraps the required three aspects without changing their relative ordering. Depth is per thread; After performs cleanup on success and failure. All five advice types are represented.
+GET /api/books reads Accept-Language through RequestHeader. English/default
+responses contain id, title, author and year. Russian responses contain id,
+название, автор and год. Regional tags and q preferences are handled by
+Locale.lookup. Unsupported languages fall back to English. Content-Language
+reports the selected language; Vary: Accept-Language declares cache variation.
 
-Lab4EvidenceTest exercises the actual Spring context, proxy beans and MVC mappings through MockMvc. It checks outcomes before writing evidence/results.json. Captured logs are real test output, not predicted examples. No external HTTP listener is used during those tests; run the JAR for the live classroom demonstration.
+    curl -i -H "Accept-Language: en" "http://localhost:8080/api/books?limit=1"
+    curl -i -H "Accept-Language: ru" "http://localhost:8080/api/books?limit=1"
 
-After a successful `mvn clean verify`, `python scripts/build_report.py` creates the report from evidence. It needs python-docx, Pillow and DejaVu fonts. The GitHub workflow provisions these tools and converts the report to PDF using LibreOffice.
+## Required failure cases
 
-The upload must place `pom.xml`, `src`, `scripts` and `.github` at repository root. The workflow triggers on pushes to lab04. It has read-only repository permissions and uploads output as a workflow artifact; it does not alter branches or merge pull requests.
+| Request | Status and cause |
+| --- | --- |
+| GET /api/books/abc | 400: long argument conversion failed |
+| GET /api/nothing | 404: no API mapping or static resource |
+| DELETE /api/books | 405: collection URL has no DELETE mapping |
+| POST /api/books with Content-Type text/plain | 415: consumes JSON condition fails |
+| GET /api/books with Accept application/xml | 406: produces JSON condition fails |
+
+## Automated verification and report
+
+The lab05 workflow runs Maven tests on Java 25, starts the real runnable JAR,
+sends HTTP requests, and drives Chromium through catalogue, filter, form POST
+and refresh. It checks CSS, the flash lifecycle, duplicate prevention, all REST
+statuses and language headers. Screenshots come from that running application.
+
+The successful run publishes two artifacts:
+- Lab05-Report-and-Evidence: DOCX, PDF, browser screenshots, responses and server log.
+- Lab05-Application: runnable JAR.
+
+Local evidence generation, after a successful Maven verification:
+
+    python -m pip install python-docx pillow playwright
+    python -m playwright install --with-deps chromium
+    python scripts/capture_lab05.py
+    python scripts/build_lab05_report.py
+
+The capture script uses port 8080 and requires it to be free. Use
+python scripts/capture_lab05.py --port 8081 to use another port. PDF conversion
+requires LibreOffice. The report script refuses to build a final report when
+the live checks did not pass.
+
+A live demonstration and explanations remain part of the assignment.
+
+## Earlier labs
+
+The prior code remains available:
+- /api/lab2/notify, /api/lab2/custom, /api/lab2/scopes and /api/lab2/lifecycle
+- /api/lab3/config with default, dev and prod configuration
+- /api/lab4/item/{id}, /api/lab4/items, /api/lab4/proxy and removal experiments
+
+requests.http and scripts/build_report.py belong to Lab 4. Lab 5 evidence is
+stored separately under evidence/lab05.

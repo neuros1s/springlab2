@@ -3,6 +3,9 @@ spring:
     name: spring-lab
 server:
   port: 8080
+  servlet:
+    session:
+      tracking-modes: cookie
 app:
   owner: Turgynbek Amirbek
   group: IS2413
