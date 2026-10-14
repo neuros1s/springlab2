@@ -1,0 +1,42 @@
+LAB 5 — Turgynbek Amirbek, IS2413, номер 20, вариант 8
+
+Что подготовлено
+Каталог книг, все пять REST-операций, HTML-страница, фильтр, форма добавления,
+POST → redirect → GET, flash-сообщение, статические CSS и index.html.
+Вариант 8: Accept-Language меняет названия полей списка книг на английские или русские.
+
+Где взять результат
+Открой GitHub → neuros1s/springlab2 → Actions → Lab 5 build browser checks and report.
+В успешном запуске скачай Lab05-Report-and-Evidence: PDF и DOCX лежат в submission.
+В evidence/lab05 находятся реальные скриншоты Chromium, HTTP-ответы, результаты и лог.
+Lab05-Application содержит готовый JAR. Код находится в ветке lab05.
+
+Что прикрепить в Teams
+Итоговый PDF Lab05_Turgynbek_Amirbek_IS2413.pdf и ссылку на PR или ветку lab05.
+Отчет без живой демонстрации не оценивается по заданию.
+
+Как запустить на своем компьютере
+Нужна Java 25. Из папки с JAR:
+java -jar spring-lab-01-0.0.1-SNAPSHOT.jar
+Открой http://localhost:8080/books.
+При перезапуске снова появляются три исходные книги.
+
+Если запускаешь из исходников
+Скачай Code → Download ZIP для ветки lab05, распакуй архив.
+Открой терминал в папке с pom.xml:
+mvn clean verify
+java -jar target/spring-lab-01-0.0.1-SNAPSHOT.jar
+
+Что показать на защите
+Сначала /books и /books?author=Bloch, затем /css/app.css и /.
+Добавь книгу через форму. Сообщение появится один раз; после F5 книга не дублируется.
+В HTTP-клиенте покажи пять операций из requests-lab05.http, создание с 201 и Location,
+двойное удаление с 204 и 404, а также пять ошибочных статусов из отчета.
+Для варианта отправь GET /api/books?limit=1 с Accept-Language en и затем ru.
+Названия полей изменятся, но данные книги останутся теми же.
+
+Для curl в PowerShell Windows используй curl.exe вместо curl.
+Пример:
+curl.exe -i -H "Accept-Language: ru" "http://localhost:8080/api/books?limit=1"
+
+Данные хранятся только в памяти. Это требование лабораторной, не ошибка сохранения.
