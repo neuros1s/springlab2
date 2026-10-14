@@ -48,8 +48,8 @@ def p(text):
 def h(text):
     doc.add_heading(text,1)
 def new(text):
-    doc.add_page_break()
-    h(text)
+    heading=doc.add_heading(text,1)
+    heading.paragraph_format.page_break_before=True
 def code(text, size=8.1):
     q=doc.add_paragraph()
     q.paragraph_format.space_after=Pt(7)
