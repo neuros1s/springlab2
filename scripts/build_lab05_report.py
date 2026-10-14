@@ -89,9 +89,9 @@ def table(head, rows, widths=None):
                     run.font.size=Pt(9)
                     if i==0:run.bold=True
     doc.add_paragraph()
-def picture(file, caption):
+def picture(file, caption, max_height=6.4):
     fp=EVIDENCE/file
-    with Image.open(fp) as img: width=min(6.95,6.4*img.width/img.height)
+    with Image.open(fp) as img: width=min(6.95,max_height*img.width/img.height)
     doc.add_picture(str(fp),width=Inches(width))
     q=doc.add_paragraph(caption)
     q.paragraph_format.space_after=Pt(8)
@@ -225,7 +225,7 @@ p('The filter changes the books collection in the model before the template iter
   'it. The matching author is Joshua Bloch; the other two seed records are absent.')
 
 new('Post Redirect Get and flash message')
-picture('flash.png','Figure 3. The redirected GET after adding Java Precisely. The flash message appears once.')
+picture('flash.png','Figure 3. The redirected GET after adding Java Precisely. The flash message appears once.',5.65)
 prg=DATA['prg']
 table(['Request or observation','Measured result'],[
     ('POST /books',str(prg['postStatus'])+'; Location '+prg['postLocation']),
