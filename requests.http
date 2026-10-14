@@ -1,0 +1,26 @@
+### No audit
+GET http://localhost:8080/api/lab4/item/5
+
+### All core aspects and slow timing
+GET http://localhost:8080/api/lab4/items?limit=5
+
+### Failure
+DELETE http://localhost:8080/api/lab4/item/0
+
+### Proxy
+GET http://localhost:8080/api/lab4/proxy
+
+### External remove
+DELETE http://localhost:8080/api/lab4/item/5
+
+### Before the fix
+GET http://localhost:8080/api/lab4/remove-twice/5
+
+### After the fix and nested tracing
+GET http://localhost:8080/api/lab4/remove-twice-fixed/5
+
+### Nested exception
+GET http://localhost:8080/api/lab4/remove-twice-fixed/0
+
+### Depth should reset to zero
+GET http://localhost:8080/api/lab4/item/5

@@ -1,0 +1,6 @@
+target/
+evidence/
+submission/
+__pycache__/
+.idea/
+*.iml
